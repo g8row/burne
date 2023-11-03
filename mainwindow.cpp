@@ -19,14 +19,28 @@ public:
     ButtonStack(): QWidget() {
         layout = new QStackedLayout();
         QWidget::setLayout(layout);
+
         contextButtonsPdf = new QWidget();
         contextButtonsPdf->setLayout(new QHBoxLayout());
-        contextButtonsPdf->layout()->addWidget(new QPushButton("Open"));
-        contextButtonsPdf->layout()->addWidget(new QPushButton("Print"));
+
+        QPushButton* openButton = new QPushButton("Open");
+        openButton->setFixedHeight(70);
+        openButton->setStyleSheet("font-size: 15px;");
+
+        contextButtonsPdf->layout()->addWidget(openButton);
+        QPushButton* printButton = new QPushButton("Print");
+        printButton->setFixedHeight(70);
+        printButton->setStyleSheet("font-size: 15px;");
+        contextButtonsPdf->layout()->addWidget(printButton);
 
         contextButtonsImg = new QWidget();
         contextButtonsImg->setLayout(new QHBoxLayout());
-        contextButtonsImg->layout()->addWidget(new QPushButton("Flash"));
+
+        QPushButton* flashButton = new QPushButton("Flash");
+        flashButton->setFixedHeight(70);
+        flashButton->setStyleSheet("font-size: 15px;");
+        contextButtonsImg->layout()->addWidget(flashButton);
+
         layout->addWidget(contextButtonsImg);
         layout->addWidget(contextButtonsPdf);
     }
@@ -115,6 +129,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setFixedSize(800,480);
     std::string path = getenv("HOME");
     path.append("/Downloads");
     struct stat sb;
@@ -136,13 +151,15 @@ MainWindow::MainWindow(QWidget *parent)
         // Testing whether the path points to a
         // non-directory or not If it does, displays path
         if (stat(path, &sb) == 0 && !(sb.st_mode & S_IFDIR)){
-            QPushButton* button = new QPushButton(path);
+            QPushButton* button = new QPushButton(outfilename.filename().c_str());
             if(hasEnding(outfilename_str,".pdf")){
                 QObject::connect(button,&QPushButton::clicked,bStack,&ButtonStack::displayPdf);
             }
             if(hasEnding(outfilename_str,".img")){
                 QObject::connect(button,&QPushButton::clicked,bStack,&ButtonStack::displayImg);
             }
+            button->setFixedHeight(100);
+            button->setStyleSheet("font-size: 15px;");
             buttonsVec.append(button);
         }
     }
@@ -151,13 +168,22 @@ MainWindow::MainWindow(QWidget *parent)
 
     QWidget* filters = new QWidget();
     filters->setLayout(new QHBoxLayout());
+
     QPushButton* pdfFilter = new QPushButton("Pdf");
+    pdfFilter->setFixedHeight(70);
+    pdfFilter->setStyleSheet("font-size: 15px;");
     connect(pdfFilter,&QPushButton::clicked,buttons,&ButtonList::setButtonsPdf);
     filters->layout()->addWidget(pdfFilter);
+
     QPushButton* imgFilter = new QPushButton("Img");
+    imgFilter->setFixedHeight(70);
+    imgFilter->setStyleSheet("font-size: 15px;");
     connect(imgFilter,&QPushButton::clicked,buttons,&ButtonList::setButtonsImg);
     filters->layout()->addWidget(imgFilter);
+
     QPushButton* clearFilter = new QPushButton("Clear");
+    clearFilter->setFixedHeight(70);
+    clearFilter->setStyleSheet("font-size: 15px;");
     connect(clearFilter,&QPushButton::clicked,buttons,&ButtonList::setButtonsClear);
     filters->layout()->addWidget(clearFilter);
 
