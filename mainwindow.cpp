@@ -53,7 +53,7 @@ public:
         layout()->addWidget(imgFilter);
 
         //change this to a status of sdcard
-        status = new QLabel("/dev/sdb");
+        status = new QLabel("placeholder");
         status->setFixedHeight(60);
         status->setAlignment(Qt::AlignCenter);
         status->setStyleSheet("font-size: 20px; color: green");
@@ -163,7 +163,7 @@ public:
         });
         QObject::connect(proc, &QProcess::stateChanged, [proc, procCat, this, bStack]() {
             if(proc->state() == QProcess::ProcessState::Running){
-                procCat->start(QString("/bin/bash"), QStringList({"cat.sh"}));
+                procCat->start(QString("/bin/sh"), QStringList({"cat.sh"}));
             }else if(proc->state()== QProcess::ProcessState::NotRunning){
                 procCat->close();
                 progressBar->setValue(100);
@@ -172,7 +172,7 @@ public:
             }
         });
 
-        proc->start(QString("/bin/bash"),QStringList({"scr.sh", path}));
+        proc->start(QString("/bin/sh"),QStringList({"scr.sh", path}));
         proc->waitForStarted();
 
         //mkfifo("/home/alex/psplash.txt",777);
@@ -289,7 +289,7 @@ MainWindow::MainWindow(QWidget *parent)
     if (!system("ping -c 1 -w 1 taos  > /dev/null")){
         qInfo("%s", path.toLocal8Bit().toStdString().c_str());
         qInfo("%s", (QString("sshfs taos:/build/alex/st/stm32mp/poky ") + getenv("HOME") + "/taos -o allow_root").toLocal8Bit().toStdString().c_str());
-        system((QString("sshfs taos:/build/alex/st/stm32mp/poky ") + getenv("HOME") + "/taos -o allow_root").toLocal8Bit().toStdString().c_str());
+        system((QString("sshfs  ") + getenv("HOME") + "/taos -o allow_root").toLocal8Bit().toStdString().c_str());
         qInfo("successful");
     }else{
         qInfo("not successful");
