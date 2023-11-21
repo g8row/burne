@@ -221,11 +221,11 @@ public:
         tree->setFixedHeight(280);
         tree->resizeColumnToContents(0);
         tree->setHeaderHidden(1);
-        tree->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+        //tree->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
         tree->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         tree->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
         tree->header()->setStretchLastSection(false);
-        QScroller::grabGesture(tree, QScroller::LeftMouseButtonGesture);
+        QScroller::grabGesture(tree, QScroller::TouchGesture);
 
         layout = new QStackedLayout();
         layout->addWidget(tree);
@@ -289,7 +289,7 @@ MainWindow::MainWindow(QWidget *parent)
     if (!system("ping -c 1 -w 1 taos  > /dev/null")){
         qInfo("%s", path.toLocal8Bit().toStdString().c_str());
         qInfo("%s", (QString("sshfs taos:/build/alex/st/stm32mp/poky ") + getenv("HOME") + "/taos -o allow_root").toLocal8Bit().toStdString().c_str());
-        system((QString("sshfs  ") + getenv("HOME") + "/taos -o allow_root").toLocal8Bit().toStdString().c_str());
+        system((QString("sshfs taos:/build/alex/st/stm32mp/poky ") + getenv("HOME") + "/taos -o allow_root").toLocal8Bit().toStdString().c_str());
         qInfo("successful");
     }else{
         qInfo("not successful");

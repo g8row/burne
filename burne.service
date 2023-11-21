@@ -1,0 +1,19 @@
+[Unit]
+Description=Burne service
+After=weston.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+Environment="HOME=/home/root"
+Environment="XDG_RUNTIME_DIR=/run/user/0"
+WorkingDirectory=/home/root
+
+ExecStart=/usr/bin/burne -platform wayland
+
+[Install]
+WantedBy=multi-user.target
+

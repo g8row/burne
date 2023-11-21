@@ -1,1 +1,1 @@
-bmaptool copy $1  /dev/sdb --psplash-pipe /home/alex/psplash.txt
+bmaptool copy $1  /dev/sda --psplash-pipe /tmp/psplash.txt
