@@ -13,10 +13,17 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    BmapOutput.h \
+    ButtonStack.h \
+    FilesAndBmap.h \
+    Filters.h \
     mainwindow.h
 
 FORMS += \
     mainwindow.ui
+
+LIBS += \
+    -ludev
 
 # Default rules for deployment.
 #qnx: target.path = /tmp/$${TARGET}/bin
