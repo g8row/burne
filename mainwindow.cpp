@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->centralwidget->setLayout(new QVBoxLayout());
 
     QString path = getenv("HOME");
-    path.append("/taos/build/tmp-glibc/deploy/images");
+    /*path.append("/taos/build/tmp-glibc/deploy/images");
 
     //path.append("/taos");
 
@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
         qInfo("successful");
     }else{
         qInfo("not successful");
-    }
+    }*/
 
     bStack =  new ButtonStack();
 
@@ -44,17 +44,19 @@ MainWindow::MainWindow(QWidget *parent)
     filters = new Filters();
     connect(filters->getImgFilter(),&QPushButton::toggled,filesAndBmap,&FilesAndBmap::filterImg);
     connect(filters->getWicFilter(),&QPushButton::toggled,filesAndBmap,&FilesAndBmap::filterWic);
+    connect(filters->getDisksComboBox(), &QComboBox::textActivated, filesAndBmap, &FilesAndBmap::setBlockDevice);
 
     ui->centralwidget->layout()->addWidget(filters);
     ui->centralwidget->layout()->addWidget(filesAndBmap);
     ui->centralwidget->layout()->addWidget(bStack);
 
-    struct udev *udev;
+
+
+    /* Create the udev object
+     *     struct udev *udev;
     struct udev_enumerate *enumerate;
     struct udev_list_entry *devices, *dev_list_entry;
     struct udev_device *dev;
-
-    /* Create the udev object
     udev = udev_new();
     if (!udev) {
         printf("Can't create udev\n");

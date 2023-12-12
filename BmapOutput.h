@@ -31,7 +31,7 @@ public:
         proc->setWorkingDirectory("/usr/bin");
     }
 
-    void flash(const QString& path, ButtonStack* bStack){
+    void flash(const QString& path, const QString& blockDevice,ButtonStack* bStack){
         qInfo("%d",mkfifo("/tmp/psplash.txt",777));
         QObject::connect(procCat, &QProcess::readyReadStandardOutput, [this]() {
             auto output=procCat->readAllStandardOutput();
@@ -53,13 +53,13 @@ public:
                 procCat->start(QString("/bin/sh"), QStringList({"cat.sh"}));
             }else if(proc->state()== QProcess::ProcessState::NotRunning){
                 procCat->close();
+                proc->close();
                 progressBar->setValue(100);
                 remove("/tmp/psplash.txt");
                 bStack->getBackButton()->setEnabled(true);
             }
         });
-
-        proc->start(QString("/bin/sh"),QStringList({"scr.sh", path}));
+        proc->start(QString("/bin/sh"),QStringList({"scr.sh", path, blockDevice.split(" ")[0]}));
         proc->waitForStarted();
 
         //mkfifo("/home/alex/psplash.txt",777);

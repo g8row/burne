@@ -17,6 +17,7 @@ HEADERS += \
     ButtonStack.h \
     FilesAndBmap.h \
     Filters.h \
+    UdevThread.h \
     mainwindow.h
 
 FORMS += \

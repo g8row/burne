@@ -16,6 +16,7 @@ class FilesAndBmap : public QWidget {
     QFileSystemModel *model;
     QTreeView *tree;
     QString path;
+    QString blockDevice;
     ButtonStack* bStack;
     QStringList* filters;
 public:
@@ -76,13 +77,21 @@ public:
     }
 public slots:
     void flash(){
+        qInfo(blockDevice.toStdString().c_str());
+        if (blockDevice.isNull()) {
+            return;
+        }
         layout->setCurrentWidget(bmapOutput);
-        bmapOutput->flash(model->filePath(tree->selectionModel()->selection().at(0).indexes().at(0)), bStack);
+        bmapOutput->flash(model->filePath(tree->selectionModel()->selection().at(0).indexes().at(0)), blockDevice, bStack);
         bStack->displayBack();
     }
     void back(){
         layout->setCurrentWidget(tree);
         bStack->displayFlash();
+    }
+    void setBlockDevice(const QString &path) {
+        blockDevice = path;
+        qInfo(blockDevice.toStdString().c_str());
     }
     void filterWic(bool checked){
         if(checked){
