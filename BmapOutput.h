@@ -24,14 +24,14 @@ public:
         console = new QTextBrowser();
         progressBar = new QProgressBar();
         layout->addWidget(console);
-        layout->addWidget(progressBar);\
-            proc = new QProcess();
-        procCat = new QProcess();
-        procCat->setWorkingDirectory("/usr/bin");
-        proc->setWorkingDirectory("/usr/bin");
+        layout->addWidget(progressBar);
     }
 
     void flash(const QString& path, const QString& blockDevice,ButtonStack* bStack){
+        proc = new QProcess();
+        procCat = new QProcess();
+        procCat->setWorkingDirectory("/usr/bin");
+        proc->setWorkingDirectory("/usr/bin");
         qInfo("%d",mkfifo("/tmp/psplash.txt",777));
         QObject::connect(procCat, &QProcess::readyReadStandardOutput, [this]() {
             auto output=procCat->readAllStandardOutput();
@@ -40,24 +40,27 @@ public:
 
         QObject::connect(proc, &QProcess::readyReadStandardOutput, [this]() {
             auto output=proc->readAllStandardOutput();
-            console->setText(output);
+            console->append(output);
             repaint();
         });
         QObject::connect(proc, &QProcess::readyReadStandardError, [this]() {
             auto output=proc->readAllStandardError();
-            console->setText(output);
+            console->append(output);
             repaint();
         });
-        QObject::connect(proc, &QProcess::stateChanged, [this, bStack]() {
-            if(proc->state() == QProcess::ProcessState::Running){
-                procCat->start(QString("/bin/sh"), QStringList({"cat.sh"}));
-            }else if(proc->state()== QProcess::ProcessState::NotRunning){
-                procCat->close();
-                proc->close();
-                progressBar->setValue(100);
-                remove("/tmp/psplash.txt");
-                bStack->getBackButton()->setEnabled(true);
-            }
+        QObject::connect(proc, &QProcess::finished, [this, bStack]() {
+            proc->kill();
+            proc->deleteLater();
+            procCat->deleteLater();
+            progressBar->setValue(100);
+            remove("/tmp/psplash.txt");
+            bStack->getBackButton()->setEnabled(true);
+        });
+
+        QObject::connect(proc, &QProcess::started, [this]() {
+            console->clear();
+            repaint();
+            procCat->start(QString("/bin/sh"), QStringList({"cat.sh"}));
         });
         proc->start(QString("/bin/sh"),QStringList({"scr.sh", path, blockDevice.split(" ")[0]}));
         proc->waitForStarted();
@@ -79,8 +82,6 @@ public:
         delete console;
         delete progressBar;
         delete layout;
-        delete proc;
-        delete procCat;
     }
 };
 
