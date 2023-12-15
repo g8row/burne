@@ -8,7 +8,7 @@
 #include <QScroller>
 #include <QAbstractItemView>
 #include <libudev.h>
-#include <UdevThread.h>>
+#include <UdevThread.h>
 
 class Filters : public QWidget{
     QPushButton* wicFilter;
@@ -118,8 +118,8 @@ public:
 
 public slots:
     void handleResults(QString action, QString devnode){
-        qInfo(action.toStdString().c_str());
-        qInfo(devnode.toStdString().c_str());
+        qInfo("%s", action.toStdString().c_str());
+        qInfo("%s", devnode.toStdString().c_str());
         if (action.compare("add") == 0) {
             disks->addItem(devnode);
         }
